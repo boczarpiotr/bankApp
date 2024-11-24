@@ -20,6 +20,9 @@ public class AccountService {
     ObjectMapper objectMapper;
 
     public ResponseEntity<String> createAccount(AccountRequest accountRequest) {
+        if (accountRequest.getInitialBalancePln() <= 0.0){
+            return ResponseEntity.status(403).body("{\"Error\": \"Amount has to be greater than 0\"}");
+        }
         Account account = new Account();
         account.setName(accountRequest.getName());
         account.setSurname(accountRequest.getSurname());
@@ -36,7 +39,10 @@ public class AccountService {
             String s = objectMapper.writeValueAsString(referenceById.get());
             return ResponseEntity.status(200).body(s);
         } else {
-            return ResponseEntity.status(404).body("{\"Error\": \"No data for id: " + id + "\"}");
+            return getNoFoundResponse(id);
         }
+    }
+    public ResponseEntity<String> getNoFoundResponse(Long id){
+        return ResponseEntity.status(404).body("{\"Error\": \"No data for id: " + id + "\"}");
     }
 }

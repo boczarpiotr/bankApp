@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class TestController {
+public class ExchangeController {
 
     @Autowired
     AccountRepository accountRepository;
@@ -32,16 +32,15 @@ public class TestController {
         return accountService.createAccount(accountRequest);
     }
 
-//    @GetMapping("/getUsdRate")
-//    public String getUsdRate() {
-//        double usdRate = rateService.getUsdRate();
-//
-//        return "USD rate is : " + usdRate;
-//    }
     @PostMapping(value = "/exchangeFromPln",
             produces = "application/json")
     public ResponseEntity<String> exchangeFromPln(@RequestBody RateRequest rateRequest) throws JsonProcessingException {
         return rateService.changePlnToUsd(rateRequest.getId(), rateRequest.getAmountForExchange());
     }
 
+    @PostMapping(value = "/exchangeFromUsd",
+            produces = "application/json")
+    public ResponseEntity<String> exchangeFromUsd(@RequestBody RateRequest rateRequest) throws JsonProcessingException {
+        return rateService.changeUsdToPln(rateRequest.getId(), rateRequest.getAmountForExchange());
+    }
 }
